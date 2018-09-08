@@ -24,3 +24,8 @@ let russianTranslationObj = {
   new: 'Новые функции',
   year: 'Год'
 };
+
+const printToDom = (stringToPrint, divId) => {
+  const selectedDiv = document.getElementById(divId);
+  selectedDiv.innerHTML = stringToPrint;
+};
