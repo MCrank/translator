@@ -38,3 +38,22 @@
 #print-results {
   /* margin: 10px; */
 }
+
+#app-buttons-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+#lang-buttons {
+  justify-content: space-around;
+  flex-direction: row;
+  flex-grow: 1;
+  /* width: 100%; */
+}
+
+.button {
+  /* padding: 0; */
+  width: 32.88%;
+  height: 50px;
+  border-radius: 5px;
+}
