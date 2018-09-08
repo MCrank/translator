@@ -1,3 +1,19 @@
 #app-header {
   text-align: center;
 }
+
+#app-instruction-cards {
+  display: flex;
+  border: 3px solid goldenrod;
+  flex-wrap: wrap;
+  margin: 0px 125px;
+}
+
+#instruction-card-content {
+  width: 100%;
+}
+
+#header {
+  margin: 5px;
+  /* background: tomato; */
+}
