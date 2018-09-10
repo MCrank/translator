@@ -85,3 +85,16 @@ tr:nth-child(even) {
 td:first-letter {
   text-transform: capitalize;
 }
+
+#translation-error {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#print-results {
+  font-size: 25px;
+  margin-bottom: 25px;
+}
+span {
+  color: red;
+}

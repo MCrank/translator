@@ -14,7 +14,9 @@ const languages = {
     and: 'Und',
     happy: 'Glücklich',
     new: 'Neu',
-    year: 'Jahr'
+    year: 'Jahr',
+    tree: 'Baum',
+    holiday: 'Urlaub'
   },
   russian: {
     merry: 'Веселого',
@@ -22,13 +24,14 @@ const languages = {
     and: 'И',
     happy: 'Счастлив',
     new: 'Новые функции',
-    year: 'Год'
+    year: 'Год',
+    holiday: 'Праздник'
   }
 };
 
 // Function to print string to DOM
-const printToDom = (stringToPrint, divId) => {
-  const selectedDiv = document.getElementById(divId);
+const printToDom = (stringToPrint, elementId) => {
+  const selectedDiv = document.getElementById(elementId);
   selectedDiv.innerHTML = stringToPrint;
 };
 
@@ -108,20 +111,33 @@ const translateIt = (userInput, language) => {
 
     if (wordMatch === undefined) {
       translationArr.push('n/a');
-      // console.log('Word not found: ' + userInput[i]);
     } else {
       translationArr.push(wordMatch);
-      // console.log('Word Found: ' + wordMatch);
     }
-    // printToDom(wordMatch, 'print-results');
-    // console.log(languages[language].userInput[i]);
   }
   translateItSb(translationArr);
 };
 
 const translateItSb = (translationArr) => {
-  // let newString = '';
-  console.log('translateItSb: ' + translationArr);
+  let newStringArr = [];
+  let results = '';
+  for (let i = 0; i < translationArr.length; i++) {
+    // Check if there is a word that we did not know and wrap it in a span so we can style
+    if (translationArr[i] === 'n/a') {
+      newStringArr.push(`<span><strong>(${translationArr[i]})</strong></span>`);
+    } else {
+      newStringArr.push(translationArr[i]);
+    }
+  }
+  // If we have an error lets pop a <p> to let the user know they entered an unkown word
+  if (newStringArr.includes('<span><strong>(n/a)</strong></span>')) {
+    let translationErr = 'Your phrase includes words I do not know!';
+    printToDom(translationErr, 'translation-error');
+  } else {
+    printToDom('', 'translation-error');
+  }
+  results = newStringArr.join(' ');
+  printToDom(results, 'print-results');
 };
 
 // Add event listener on each button and grab Button Value
@@ -133,15 +149,13 @@ document.getElementById('lang-buttons').addEventListener('click', function(event
   // 2. Send that to a function to translate against our list of words
   // 3. Send the results to a function to display
   let userArray = convertUserInput();
-
   // Stop processing if the array returned is undefined (Empyty/Null)
   if (userArray === undefined) {
     return;
   }
-  console.log(event.target.value.toString().toLowerCase());
-  console.log(userArray);
   // Lets send the array to the translateIt function to loop through and translate results
   translateIt(userArray, clickedLanguage);
 });
 
+// Call function to populate our available words table
 availableWords();
