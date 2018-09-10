@@ -99,7 +99,11 @@ const convertUserInput = () => {
     return;
   }
   let userArray = [];
-  return (userArray = inputElement.value.toLowerCase().split(' '));
+  // Clean up our string and make it an array
+  return (userArray = inputElement.value
+    .trim()
+    .toLowerCase()
+    .split(' '));
 };
 
 const translateIt = (userInput, language) => {
@@ -107,12 +111,15 @@ const translateIt = (userInput, language) => {
   // Lets bounce the words against the chosen language
   let translationArr = [];
   for (let i = 0; i < userInput.length; i++) {
-    let wordMatch = languages[language][userInput[i]];
+    // If the user typed an extra space between words skip it
+    if (!(userInput[i] === '')) {
+      let wordMatch = languages[language][userInput[i]];
 
-    if (wordMatch === undefined) {
-      translationArr.push('n/a');
-    } else {
-      translationArr.push(wordMatch);
+      if (wordMatch === undefined) {
+        translationArr.push('n/a');
+      } else {
+        translationArr.push(wordMatch);
+      }
     }
   }
   translateItSb(translationArr);
