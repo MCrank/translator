@@ -1,5 +1,5 @@
 // Populate the languages object with our chosen translation
-let languages = {
+const languages = {
   greek: {
     merry: 'Καλά',
     christmas: 'Χριστούγεννα',
@@ -14,7 +14,9 @@ let languages = {
     and: 'Und',
     happy: 'Glücklich',
     new: 'Neu',
-    year: 'Jahr'
+    year: 'Jahr',
+    tree: 'Baum',
+    holiday: 'Urlaub'
   },
   russian: {
     merry: 'Веселого',
@@ -22,25 +24,15 @@ let languages = {
     and: 'И',
     happy: 'Счастлив',
     new: 'Новые функции',
-    year: 'Год'
+    year: 'Год',
+    holiday: 'Праздник'
   }
 };
 
 // Function to print string to DOM
-const printToDom = (stringToPrint, divId) => {
-  const selectedDiv = document.getElementById(divId);
+const printToDom = (stringToPrint, elementId) => {
+  const selectedDiv = document.getElementById(elementId);
   selectedDiv.innerHTML = stringToPrint;
-};
-
-// Grab the contents of the Text Input box and create an Array
-const convertUserInput = () => {
-  const inputElement = document.getElementById('user-input');
-  if (inputElement.value.length < 1) {
-    alert('You did not enter a phrase to be translated.');
-    return;
-  }
-  let userArray = [];
-  return (userArray = inputElement.value.split(' '));
 };
 
 // Let's loop through and grab a list of available words in our object that we can translate
@@ -59,7 +51,7 @@ const availableWords = () => {
 };
 
 // Adds a new Table Header to the table passed in by Id
-const printToTableHeader = (tableId, i, tableHeader) => {
+const printToTableHeader = (tableId, column, tableHeader) => {
   let myTable = document.getElementById(tableId);
   // Got the table now create a <thead> if one does not exist else skip
   if (myTable.tHead == null) {
@@ -70,10 +62,11 @@ const printToTableHeader = (tableId, i, tableHeader) => {
     myTable.tHead.insertRow(0);
   }
   // populate the <td> of the Header Row
-  let cell = myTable.tHead.rows[0].insertCell(i);
+  let cell = myTable.tHead.rows[0].insertCell(column);
   cell.innerHTML = `<b>${tableHeader}</b>`;
 };
 
+// Adds the data rows to the table passed in by Id
 const printToTableBody = (tableId, column, row, tableBodyData) => {
   let myTable = document.getElementById(tableId);
   // Need to create the <tbody> element if it does not exist.
@@ -98,23 +91,78 @@ const printToTableBody = (tableId, column, row, tableBodyData) => {
   cell.innerHTML = tableBodyData;
 };
 
-const translateIt = () => {};
+// Grab the contents of the Text Input box and create an Array
+const convertUserInput = () => {
+  const inputElement = document.getElementById('user-input');
+  if (inputElement.value.length < 1) {
+    alert('You must enter at least one word to be translated.');
+    return;
+  }
+  let userArray = [];
+  // Clean up our string and make it an array
+  return (userArray = inputElement.value
+    .trim()
+    .toLowerCase()
+    .split(' '));
+};
+
+const translateIt = (userInput, language) => {
+  // Okay we have our User Input Array being passed in.
+  // Lets bounce the words against the chosen language
+  let translationArr = [];
+  for (let i = 0; i < userInput.length; i++) {
+    // If the user typed an extra space between words skip it
+    if (!(userInput[i] === '')) {
+      let wordMatch = languages[language][userInput[i]];
+
+      if (wordMatch === undefined) {
+        translationArr.push('n/a');
+      } else {
+        translationArr.push(wordMatch);
+      }
+    }
+  }
+  translateItSb(translationArr);
+};
+
+const translateItSb = (translationArr) => {
+  let newStringArr = [];
+  let results = '';
+  for (let i = 0; i < translationArr.length; i++) {
+    // Check if there is a word that we did not know and wrap it in a span so we can style
+    if (translationArr[i] === 'n/a') {
+      newStringArr.push(`<span><strong>(${translationArr[i]})</strong></span>`);
+    } else {
+      newStringArr.push(translationArr[i]);
+    }
+  }
+  // If we have an error lets pop a <p> to let the user know they entered an unkown word
+  if (newStringArr.includes('<span><strong>(n/a)</strong></span>')) {
+    let translationErr = 'Your phrase includes words I do not know!';
+    printToDom(translationErr, 'translation-error');
+  } else {
+    printToDom('', 'translation-error');
+  }
+  results = newStringArr.join(' ');
+  printToDom(results, 'print-results');
+};
 
 // Add event listener on each button and grab Button Value
 document.getElementById('lang-buttons').addEventListener('click', function(event) {
+  let clickedLanguage = event.target.value.toString().toLowerCase();
+
   // Okay now that we have which button was clicked lets do the magic
   // 1. Convert the User Imput into an array
   // 2. Send that to a function to translate against our list of words
   // 3. Send the results to a function to display
-
   let userArray = convertUserInput();
   // Stop processing if the array returned is undefined (Empyty/Null)
   if (userArray === undefined) {
     return;
   }
   // Lets send the array to the translateIt function to loop through and translate results
-  translateIt(userArray);
-  console.log(event.target.value);
+  translateIt(userArray, clickedLanguage);
 });
 
+// Call function to populate our available words table
 availableWords();
