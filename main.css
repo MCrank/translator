@@ -1,3 +1,8 @@
+/* Keeping this here as a note to maybe use later */
+/* p:first-letter {
+  text-transform:capitalize;
+} */
+
 .main-area {
   margin: 10%;
   padding: 10px;
@@ -56,4 +61,27 @@
   width: 32.88%;
   height: 50px;
   border-radius: 5px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+thead {
+  background-color: lightsalmon;
+}
+
+td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+td:first-letter {
+  text-transform: capitalize;
 }

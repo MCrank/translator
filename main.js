@@ -41,7 +41,61 @@ const convertUserInput = () => {
   }
   let userArray = [];
   return (userArray = inputElement.value.split(' '));
-  // console.log(userArray);
+};
+
+// Let's loop through and grab a list of available words in our object that we can translate
+// and present them to the user.
+// Going to use a table so will build it dynamicall...I Hope
+const availableWords = () => {
+  for (let i = 0; i < Object.keys(languages).length; i++) {
+    let objectLanguage = Object.keys(languages)[i];
+    // Okay now that I have each language lets rip through and extract the words for each language
+    printToTableHeader('available-words', i, objectLanguage);
+    for (let x = 0; x < Object.keys(languages[objectLanguage]).length; x++) {
+      let objectLanguageWord = Object.keys(languages[objectLanguage])[x];
+      printToTableBody('available-words', i, x, objectLanguageWord);
+    }
+  }
+};
+
+// Adds a new Table Header to the table passed in by Id
+const printToTableHeader = (tableId, i, tableHeader) => {
+  let myTable = document.getElementById(tableId);
+  // Got the table now create a <thead> if one does not exist else skip
+  if (myTable.tHead == null) {
+    myTable.createTHead();
+  }
+  // Check if we have a <tr> and create if not
+  if (myTable.tHead.childElementCount === 0) {
+    myTable.tHead.insertRow(0);
+  }
+  // populate the <td> of the Header Row
+  let cell = myTable.tHead.rows[0].insertCell(i);
+  cell.innerHTML = `<b>${tableHeader}</b>`;
+};
+
+const printToTableBody = (tableId, column, row, tableBodyData) => {
+  let myTable = document.getElementById(tableId);
+  // Need to create the <tbody> element if it does not exist.
+  if (myTable.tBodies.length === 0) {
+    myTable.createTBody();
+  }
+  // Create a new row if one does not exist
+  if (myTable.tBodies[0].rows[row] === undefined) {
+    // If we are past the first column we may need to back fill previous row data
+    // as blank else the code blows up
+    if (myTable.tBodies[0].rows.length - 1 < row) {
+      myTable.tBodies[0].insertRow(row);
+      for (let r = 0; r < column; r++) {
+        let backFillCell = myTable.tBodies[0].rows[row].insertCell(r);
+        backFillCell.innerHTML = '';
+      }
+    } else {
+      myTable.tBodies[0].insertRow(row);
+    }
+  }
+  let cell = myTable.tBodies[0].rows[row].insertCell(column);
+  cell.innerHTML = tableBodyData;
 };
 
 const translateIt = () => {};
@@ -62,3 +116,5 @@ document.getElementById('lang-buttons').addEventListener('click', function(event
   translateIt(userArray);
   console.log(event.target.value);
 });
+
+availableWords();
