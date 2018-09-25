@@ -1,4 +1,4 @@
-# translator
+# Translator
 
 We were tasked to build a an app using javascript objects that will translate user input text fomr English into at least three other languages.
 
